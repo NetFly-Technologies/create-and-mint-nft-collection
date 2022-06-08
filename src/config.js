@@ -17,21 +17,154 @@ const solanaMetadata = {
   ],
 };
 
+
+
+const incompatibleTraits = {
+  "Computer/Altair": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Amiga 1000": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Amiga 2000": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Apple II": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Apple Lisa": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Atari ST": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Broken": [
+    "Wallpaper/*",
+  ],
+  "Computer/Franklin Ace 1200 PC": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/IBM PC": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/McIntosh Classic": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/TRS 80": [
+    "Keyboard/*",
+    "Wallpaper/*",
+  ],
+  "Computer/Bloom Dex": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ],
+  "Computer/CryptoCurrencies": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ],
+  "Computer/Golden": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ],
+  "Computer/Mac": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ],
+  "Computer/Neon": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ],
+  "Computer/White": [
+    "Keyboard/None",
+    "Wallpaper/None",
+  ]
+}
+
+const incompatibleTraitsConfig = {
+  "Computer/Altair":
+      {
+        shouldGenerateWithFallback: true
+      },
+  "Computer/Amiga 1000": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Amiga 2000": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Apple II": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Apple Lisa": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Atari ST": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Broken": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Franklin Ace 1200 PC": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/IBM PC": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/McIntosh Classic": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/TRS 80": {
+    shouldGenerateWithFallback: true
+  },
+  "Computer/Bloom Dex": {
+    shouldGenerateWithFallback: false
+  },
+  "Computer/CryptoCurrencies": {
+    shouldGenerateWithFallback: false
+  },
+  "Computer/Golden": {
+    shouldGenerateWithFallback: false
+  },
+  "Computer/Mac": {
+    shouldGenerateWithFallback: false
+  },
+  "Computer/Neon": {
+    shouldGenerateWithFallback: false
+  },
+  "Computer/White": {
+    shouldGenerateWithFallback: false
+  },
+}
+
 // If you have selected Solana then the collection starts from 0 automatically
 const layerConfigurations = [
   {
-    growEditionSizeTo: 2,
+    growEditionSizeTo: 1000,
     layersOrder: [
       { name: "Background" },
-      { name: "Eyeball" },
-      { name: "Eye color" },
-      { name: "Iris" },
-      { name: "Shine" },
-      { name: "Bottom lid" },
-      { name: "Top lid" },
-    ]
+      { name: "Desk" },
+      { name: "Wallpaper" },
+      { name: "Accessory" },
+      { name: "Keyboard" },
+      { name: "Mouse" },
+      { name: "Computer" },
+      { name: "GPU" },
+    ],
+    incompatibleTraits: incompatibleTraits,
+    incompatibleTraitsConfig: incompatibleTraitsConfig,
+    shouldGenerateWithIncompatibleTrait: true,
+    incompatibleFallbackImage: "None"
   },
 ];
+
 
 /* Example of configuration settings
 const layerConfigurations = [
@@ -78,8 +211,8 @@ const shuffleLayerConfigurations = false;
 const debugLogs = false;
 
 const format = {
-  width: 512,
-  height: 512,
+  width: 1500,
+  height: 1100,
   smoothing: false,
 };
 
