@@ -10,7 +10,6 @@ const simplifyTraits = (traits) => {
 // Set true / false if the layer has defined incompatibilities
 const traitHasDefinedIncompatibilities = (newTrait, incompatibleTraits) => {
     const traitKey = `${newTrait.layer}/${newTrait.name}`;
-    //console.log({incompatibleTraits});
     return incompatibleTraits[traitKey];
 };
 
@@ -27,41 +26,32 @@ const incompatibleTraitsUsed = (newTraits, incompatibleTraits) => {
 
     // Loop through each layer in the list
     for (let i = 0; (i < newTraits.length); i++) {
-
+        
         // Set true / false if the layer has a defined incompatibility
         const definedIncompatibilities = traitHasDefinedIncompatibilities(newTraits[i], incompatibleTraits);
 
         // Check if incompatibilities were found for the layer
         if (definedIncompatibilities !== undefined) {
-
+            
             // Loop through each of the incompatibility layer items
             for (let n = 0; (n < definedIncompatibilities.length); n++) {
-
+                
                 // Split each of the incompatibility layers into a layer name and a layer item
                 const [layer, trait] = definedIncompatibilities[n].split('/');
-
-                console.log({simpleTrait: simpleNewTraits[layer], trait})
-
-                if (trait === "*"){
-                    console.log("Combination of traits filtered because of incompatible layers filtration rule!");
-                    return true;
-                }
+                
                 // Check if the layer name and layer item combination can be found in the layer_name and layer_item json object and if it can be found, return true and stop processing further
-                else if (simpleNewTraits[layer] === trait) {
+                if (simpleNewTraits[layer] === trait) {
                     console.log("Combination of traits filtered because of incompatible layers filtration rule!");
                     return true;
                 }
             }
         }
     }
-
+    
     // If all layers and layer items were checked and no incompatibilities found, then return false
     return false;
 };
-
-
-
+  
 module.exports = {
   incompatibleTraitsUsed,
-    traitHasDefinedIncompatibilities
 };

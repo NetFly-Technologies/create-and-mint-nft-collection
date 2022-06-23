@@ -28,7 +28,7 @@ var dnaList = new Set();
 const DNA_DELIMITER = "-";
 const HashlipsGiffer = require(`${FOLDERS.modulesDir}/HashlipsGiffer.js`);
 
-const { needsFiltration, traitHasDefinedIncompatibilities } = require('./filters');
+const { needsFiltration } = require('./filters');
 
 let hashlipsGiffer = null;
 
@@ -93,7 +93,7 @@ const layersSetup = (layersOrder) => {
       layerObj.options?.["displayName"] != undefined
         ? layerObj.options?.["displayName"]
         : layerObj.name,
-    maxRepeatedTrait: layerObj.maxRepeatedTrait,
+    maxRepeatedTrait: layerObj.maxRepeatedTrait,    
     layerItemsMaxRepeatedTrait: layerObj.layerItemsMaxRepeatedTrait,
     blend:
       layerObj.options?.["blend"] != undefined
@@ -205,14 +205,12 @@ function addToAttrbutesList(_layerName, _elementValue) {
   });
 }
 
-const loadLayerImg = async (_layer, incompatibleFallbackLayer, incompatibleFallbackImage) => {
-  console.log({elementPath:_layer.selectedElement.path })
+const loadLayerImg = async (_layer) => {
   try {
     const image = await loadImage(`${_layer.selectedElement.path}`);
-
-    return {
-      layer: _layer,
-      loadedImage: image
+    return { 
+      layer: _layer, 
+      loadedImage: image 
     };
   } catch (error) {
     console.error("Error loading image:", error);
@@ -251,12 +249,8 @@ const drawElement = (_renderObject, _index, _layersLen) => {
 const constructLayerToDna = (_dna = "", _layers = []) => {
   let mappedDnaToLayers = _layers.map((layer, index) => {
     let selectedElement = layer.elements.find(
-      (e) => {
-        console.log({_dna, e, dnaElement: cleanDna(_dna.split(DNA_DELIMITER)[index])})
-        return e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
-      }
+      (e) => e.id == cleanDna(_dna.split(DNA_DELIMITER)[index])
     );
-
     return {
       name: layer.name,
       blend: layer.blend,
@@ -264,7 +258,6 @@ const constructLayerToDna = (_dna = "", _layers = []) => {
       selectedElement: selectedElement,
     };
   });
-
   return mappedDnaToLayers;
 };
 
@@ -313,86 +306,32 @@ const isDnaUnique = (_DnaList = new Set(), _dna = "") => {
   return !_DnaList.has(_filteredDNA);
 };
 
-const verifyLayersForOverrideImage = (layers, incompatibleTraits, shouldGenerateWithIncompatibleTrait) => {
-  let layersForOverride = []
-  layers.forEach((layer) => {
-  for (var i = 0; i < layer.elements.length; i++) {
-    if (shouldGenerateWithIncompatibleTrait) {
-      const definedIncompatibilities = traitHasDefinedIncompatibilities({
-        layer: layer.name,
-        name: layer.elements[i].name
-      }, incompatibleTraits);
-
-      if (definedIncompatibilities) {
-        for (let n = 0; (n < definedIncompatibilities.length); n++) {
-          const [layer, trait] = definedIncompatibilities[n].split('/');
-          layersForOverride.push(layer)
-        }
-      }
-    }}
-  })
-  return layersForOverride
-}
-
-const findFallbackImageId = (layers, layerName, incompatibleFallbackImage) => {
-  let elementId = -1;
-   layers.forEach((layer) => {
-     if(layer.name === layerName){
-       layer.elements.forEach(element =>{
-         if(element.name === incompatibleFallbackImage){
-           elementId = element.id;
-           return;
-         }
-       })
-       return;
-     }
-  })
-  return elementId;
-}
-
-const selectTraits = (layers, shouldGenerateWithIncompatibleTrait, incompatibleTraits, incompatibleFallbackImage) => {
+const selectTraits = (layers) => {
   let traits = [];
   layers.forEach((layer) => {
-    let shouldOverrideImage = false
-    let elementIdForFallback = 0
     var totalWeight = 0;
     layer.elements.forEach((element) => {
       totalWeight += element.weight;
     });
     // number between 0 - totalWeight
     let random = Math.floor(Math.random() * totalWeight);
-
-    const layersForOverride = verifyLayersForOverrideImage(layers, incompatibleTraits, shouldGenerateWithIncompatibleTrait);
-
     for (var i = 0; i < layer.elements.length; i++) {
-      if(layersForOverride.length > 0){
-        layersForOverride.forEach(layerForOverride =>{
-          if(layer.name === layerForOverride){
-            elementIdForFallback = findFallbackImageId(layers, layer.name, incompatibleFallbackImage)
-            shouldOverrideImage = true;
-          }
-        })
-      }
-
-
       // subtract the current weight from the random weight until we reach a sub zero value.
       random -= layer.elements[i].weight;
       if (random < 0) {
         return traits.push({
           layer: layer.name,
-          id: shouldOverrideImage ? elementIdForFallback : layer.elements[i].id,
-          name: shouldOverrideImage ? incompatibleFallbackImage : layer.elements[i].name,
-          filename: shouldOverrideImage ?`${incompatibleFallbackImage}.png` : layer.elements[i].filename,
+          id: layer.elements[i].id,
+          name: layer.elements[i].name,
+          filename: layer.elements[i].filename,
           bypassDNA: layer.bypassDNA,
           maxRepeatedTrait: layer.maxRepeatedTrait,
-          layerItemsMaxRepeatedTrait: layer.layerItemsMaxRepeatedTrait,
-          needFallbackImage: shouldOverrideImage
+          layerItemsMaxRepeatedTrait: layer.layerItemsMaxRepeatedTrait
           },
         );
       }
     }
   });
-
   return traits;
 };
 
@@ -456,7 +395,7 @@ const startCreating = async () => {
         : NFT_DETAILS.startCollectionEditionFrom === '0'
           ? 0
           : _startCollectionEditionFrom
-            ? _startCollectionEditionFrom
+            ? _startCollectionEditionFrom 
             : 1;
     i <= layerConfigurations[layerConfigurations.length - 1].growEditionSizeTo + (_startCollectionEditionFrom > 1 && _startCollectionEditionFrom);
     i++
@@ -477,8 +416,7 @@ const startCreating = async () => {
     while (
       editionCount <= layerConfigurations[layerConfigIndex].growEditionSizeTo
     ) {
-      console.log("Create NFT", {editionCount, failedCount})
-      let traits = selectTraits(layers);
+      const traits = selectTraits(layers);
       let newDna = createDna(traits);
       if (isDnaUnique(dnaList, newDna)) {
 
@@ -486,44 +424,27 @@ const startCreating = async () => {
         const incompatibleTraits = layerConfigurations[layerConfigIndex].incompatibleTraits;
         const layerItemsMaxRepeatedTraits = layerConfigurations[layerConfigIndex].layerItemsMaxRepeatedTraits;
         const dependentTraits = layerConfigurations[layerConfigIndex].dependentTraits;
-        const shouldGenerateWithIncompatibleTrait = layerConfigurations[layerConfigIndex].shouldGenerateWithIncompatibleTrait;
-        const incompatibleFallbackImage = layerConfigurations[layerConfigIndex].incompatibleFallbackImage;
-
 
         if (needsFiltration(selectedTraitsList, traits, maxRepeatedTraits, incompatibleTraits, layerItemsMaxRepeatedTraits, dependentTraits)) {
-          if(shouldGenerateWithIncompatibleTrait){
-            console.log("Generated with Incompatible Fallback")
-            traits = selectTraits(layers, shouldGenerateWithIncompatibleTrait, incompatibleTraits, incompatibleFallbackImage);
-            newDna = createDna(traits)
+          failedCount++;
+          if (failedCount >= uniqueDnaTorrance) {
+            console.log(
+            `You need more layers or elements to grow your edition to ${layerConfigurations[layerConfigIndex].growEditionSizeTo} artworks!`
+            );
+            writeMetaData(JSON.stringify(metadataList, null, 2));
+            process.exit();
           }
-          else{
-            failedCount++;
-            if (failedCount >= uniqueDnaTorrance) {
-              console.log(
-                  `You need more layers or elements to grow your edition to ${layerConfigurations[layerConfigIndex].growEditionSizeTo} artworks!`
-              );
-              writeMetaData(JSON.stringify(metadataList, null, 2));
-              process.exit();
-            }
-            continue;
-          }
+          continue;
         }
-
-
 
         let results = constructLayerToDna(newDna, layers);
         let loadedElements = [];
 
         results.forEach((layer) => {
-          //console.log({traits, layer, })
-
-          loadedElements.push(loadLayerImg(layer, incompatibleFallbackLayer, incompatibleFallbackImage));
+          loadedElements.push(loadLayerImg(layer));
         });
 
-
         await Promise.all(loadedElements).then((renderObjectArray) => {
-          //console.log({renderObjectArray})
-
           debugLogs ? console.log("Clearing canvas") : null;
           ctx.clearRect(0, 0, format.width, format.height);
           if (gif.export) {
@@ -583,7 +504,6 @@ const startCreating = async () => {
     }
     layerConfigIndex++;
   }
-
   writeMetaData(JSON.stringify(metadataList, null, 2));
 };
 
