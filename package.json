@@ -21,6 +21,7 @@
     "create_wallet_edition_combo": "node utils/custom/create_wallet_edition_combo.js",
     "generate": "node index.js",
     "generate_metadata": "node utils/art_engine/generate_metadata.js",
+    "update_metadata_for_reveal": "node utils/custom/update_metadata_for_reveal.js",
     "mint_batch": "node utils/nftport/mint_batch.js",
     "mint_item": "node utils/nftport/mint_item.js",
     "mint_range": "node utils/nftport/mint_range.js",

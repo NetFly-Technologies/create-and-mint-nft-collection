@@ -13,6 +13,8 @@ const FAILEDMINTSPATH = '/failedMints';
 const FAILEDMINTSDIR = path.join(BUILDDIR, `${FAILEDMINTSPATH}`);
 const GENERICJSONPATH = '/genericJSON';
 const GENERICJSONDIR = path.join(BUILDDIR, `${GENERICJSONPATH}`);
+const REVEALJSONPATH = '/revealJSONS';
+const REVEALJSONDIR = path.join(BUILDDIR, `${REVEALJSONPATH}`);
 const GIFSPATH = '/gifs';
 const GIFSDIR = path.join(BUILDDIR, `${GIFSPATH}`);
 const IMAGESPATH = '/images';
@@ -39,11 +41,11 @@ const SOURCEPATH = '/src';
 const SOURCEDIR = path.join(BASEDIR, `${SOURCEPATH}`);
 
 const FOLDERS = {
-  baseDir: `${BASEDIR}`, 
+  baseDir: `${BASEDIR}`,
   buildPath: `${BUILDPATH}`,
   buildDir: `${BUILDDIR}`,
   batchIPFSMetasPath: `${BATCHIPFSMETASPATH}`,
-  batchIPFSMetasDir: `${BATCHIPFSMETASDIR}`,  
+  batchIPFSMetasDir: `${BATCHIPFSMETASDIR}`,
   backupPath: `${BACKUPPATH}`,
   backupDir: `${BACKUPDIR}`,
   constantsPath: `${CONSTANTSPATH}`,
@@ -52,6 +54,8 @@ const FOLDERS = {
   failedMintsDir: `${FAILEDMINTSDIR}`,
   genericJSONPath: `${GENERICJSONPATH}`,
   genericJSONDir: `${GENERICJSONDIR}`,
+  revealJSONPath: `${REVEALJSONPATH}`,
+  revealJSONDir: `${REVEALJSONDIR}`,
   gifsPath: `${GIFSPATH}`,
   gifsDir: `${GIFSDIR}`,
   imagesPath: `${IMAGESPATH}`,
